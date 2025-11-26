@@ -16,7 +16,9 @@ contract ProducerRegistry {
 
     mapping(address => Producer) public producers;
     mapping(address => bool) public hasRequested;
+
     address[] public pendingProducers;
+    address[] public allProducers;
 
     event ProducerRequested(address producer);
     event ProducerApproved(address producer);
@@ -52,7 +54,11 @@ contract ProducerRegistry {
 
         require(_capacity > 0, "Capacity must be greater than zero");
 
-        require(bytes(_aadhaarHash).length > 0, "Docs hash required");
+        require(bytes(_aadhaarHash).length > 0, "Aadhaar hash required");
+
+        if (prod.status == Status.None && !hasRequested[msg.sender]) {
+            allProducers.push(msg.sender);
+        }
 
         prod.name = _name;
         prod.location = _location;
@@ -107,6 +113,11 @@ contract ProducerRegistry {
     // Getting all Pending Producers
     function getPendingProducers() external view returns (address[] memory) {
         return pendingProducers;
+    }
+
+    // Getting all Producers
+    function getAllProducers() external view returns (address[] memory) { 
+        return allProducers; 
     }
 
     // Getting full Producer Details

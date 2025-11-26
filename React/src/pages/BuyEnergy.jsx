@@ -74,7 +74,9 @@ const BuyEnergy = () => {
                 value: totalCost,
                 account: address,
             });
-
+            
+            console.log("Tx Hash: ",tx);
+            
             //await client.waitForTransactionReceipt({ hash: tx });
             setTxHash(tx);
             alert("Energy Purchased!");

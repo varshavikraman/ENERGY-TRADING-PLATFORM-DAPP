@@ -6,22 +6,29 @@ import AdminDashboard from './pages/AdminDashboard'
 import MintTokens from './pages/MintTokens'
 import ListEnergy from './pages/ListEnergy'
 import BuyEnergy from './pages/BuyEnergy'
+import AllProducers from './pages/AllProducers'
+import HomeLayout from "./layouts/HomeLayout"
 import AuthLayout from "./layouts/AuthLayout";
 import MainLayout from "./layouts/MainLayout"
-import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 
 const router = createBrowserRouter([
   {
-    element: <AuthLayout />,
+    element: <HomeLayout />,
     children: [
       {index:true, element:<Home />},
+    ],
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      { path: "admin", element: <AdminDashboard />},
+      { path: "allProducer-requested", element: <AllProducers />},
     ],
   },
   {
     element: <MainLayout />,
     children: [
       { path: "producer-register", element: <ProducerRegister /> },
-      { path: "admin", element: ( <ProtectedAdminRoute> <AdminDashboard /></ProtectedAdminRoute>)},
       { path: "mint", element: <MintTokens /> },
       { path: "list", element: <ListEnergy /> },
       { path: "market", element: <BuyEnergy /> },
