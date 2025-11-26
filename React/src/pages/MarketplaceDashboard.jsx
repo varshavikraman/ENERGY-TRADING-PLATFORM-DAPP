@@ -12,58 +12,50 @@ const MarketplaceDashboard = () => {
     const [totalEth, setTotalEth] = useState(0n);
     const [loading, setLoading] = useState(true);
 
-    // --------------------------
-    // 1️⃣ Load marketplace token balance
-    // --------------------------
     async function loadMarketplaceBalance() {
         const bal = await readContract(client, {
-            address: ET.TOKEN_ADDRESS,
+            address: ET.Hoodi_TOKEN_ADDRESS,
             abi: ET.EnergyTokenABI,
             functionName: "balanceOf",
-            args: [ET.MARKETPLACE_ADDRESS],
+            args: [ET.Hoodi_MARKETPLACE_ADDRESS],
         });
         setMarketBalance(bal);
     }
 
-    // --------------------------
-    // 2️⃣ Load total tokens sold from EnergyPurchased events
-    // --------------------------
+    const energyPurchasedEvent = ET.EnergyMarketplaceABI.find(
+        (x) => x.type === "event" && x.name === "EnergyPurchased"
+    );
+
     async function loadTokensSold() {
         const logs = await getLogs(client, {
-            address: ET.MARKETPLACE_ADDRESS,
-            event: ET.EnergyPurchasedEvent,
+            address: ET.Hoodi_MARKETPLACE_ADDRESS,
+            event: energyPurchasedEvent,
         });
 
         let sold = 0n;
 
         logs.forEach(log => {
-            sold += log.args.amount; // amount bought by user
+            sold += log.args.amount; 
         });
 
         setTotalSold(sold);
     }
 
-    // --------------------------
-    // 3️⃣ Load ETH earned from EnergyPurchased events
-    // --------------------------
     async function loadEthEarned() {
         const logs = await getLogs(client, {
-            address: ET.MARKETPLACE_ADDRESS,
-            event: ET.EnergyPurchasedEvent,
+            address: ET.Hoodi_MARKETPLACE_ADDRESS,
+            event: energyPurchasedEvent,
         });
 
         let total = 0n;
 
         logs.forEach(log => {
-            total += log.args.totalPrice; // ETH paid
+            total += log.args.totalCost; 
         });
 
         setTotalEth(total);
     }
 
-    // --------------------------
-    // Load everything on mount
-    // --------------------------
     useEffect(() => {
         async function loadAll() {
             try {
@@ -83,13 +75,10 @@ const MarketplaceDashboard = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-12 px-4">
             <div className="max-w-4xl mx-auto">
-                {/* Header */}
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold text-gray-800 mb-2">Marketplace Analytics</h2>
                     <p className="text-gray-600">Real-time marketplace performance metrics</p>
                 </div>
-
-                {/* Analytics Cards */}
                 <div>
                     {loading ? (
                         <div className="bg-white text-center py-12">
@@ -98,7 +87,6 @@ const MarketplaceDashboard = () => {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* Total Tokens Locked */}
                             <div className="bg-white border border-gray-200 rounded-xl p-6 text-center hover:shadow-md transition-all duration-200">
                                 <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,7 +100,6 @@ const MarketplaceDashboard = () => {
                                 <p className="text-gray-500 text-sm mt-2">Available in marketplace</p>
                             </div>
 
-                            {/* Total Tokens Sold */}
                             <div className="bg-white border border-gray-200 rounded-xl p-6 text-center hover:shadow-md transition-all duration-200">
                                 <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,7 +113,6 @@ const MarketplaceDashboard = () => {
                                 <p className="text-gray-500 text-sm mt-2">Total energy traded</p>
                             </div>
 
-                            {/* Total ETH Earned */}
                             <div className="bg-white border border-gray-200 rounded-xl p-6 text-center hover:shadow-md transition-all duration-200">
                                 <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

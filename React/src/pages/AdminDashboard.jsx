@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useWallet } from "../context/WalletContext";
-import { readContract, writeContract } from "viem/actions";
+import { writeContract, readContract, waitForTransactionReceipt } from "viem/actions";
 import ET from "../assets/ET.json";
+import toast from "react-hot-toast";
 
 const AdminDashboard = () => {
   const { client, address, connectWallet } = useWallet();
@@ -9,8 +10,9 @@ const AdminDashboard = () => {
 
   const loadPending = async () => {
     try {
+
       const producers = await readContract(client, {
-        address: ET.REGISTRY_ADDRESS,
+        address: ET.Hoodi_REGISTRY_ADDRESS,
         abi: ET.ProducerRegistryABI,
         functionName: "getPendingProducers",
         args: [],
@@ -22,7 +24,7 @@ const AdminDashboard = () => {
         const p = producers[i];
 
         const result = await readContract(client, {
-          address: ET.REGISTRY_ADDRESS,
+          address: ET.Hoodi_REGISTRY_ADDRESS,
           abi: ET.ProducerRegistryABI,
           functionName: "getProducerDetails",
           args: [p],
@@ -42,27 +44,35 @@ const AdminDashboard = () => {
 
     } catch (error) {
       console.error(error);
-      alert("Failed to load pending producers");
+      toast.error("Failed to load pending producers");
+      //alert("Failed to load pending producers");
     }
   };
 
   useEffect(() => {
     loadPending();
+
+    const interval = setInterval(() => {
+      loadPending();
+    }, 2000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const approve = async (producer) => {
     if (!address) await connectWallet();
 
     const tx = await writeContract(client, {
-      address: ET.REGISTRY_ADDRESS,
+      address: ET.Hoodi_REGISTRY_ADDRESS,
       abi: ET.ProducerRegistryABI,
       functionName: "approveProducer",
       args: [producer],
       account: address,
     });
 
-    await client.waitForTransactionReceipt({ hash: tx });
-    alert("Producer Approved!");
+    await waitForTransactionReceipt(client, { hash: tx });
+    toast.success("Producer Approved!");
+    //alert("Producer Approved!");
     await loadPending();
     console.log("Approved Hash:", tx);
   };
@@ -71,15 +81,16 @@ const AdminDashboard = () => {
     if (!address) await connectWallet();
 
     const tx = await writeContract(client, {
-      address: ET.REGISTRY_ADDRESS,
+      address: ET.Hoodi_REGISTRY_ADDRESS,
       abi: ET.ProducerRegistryABI,
       functionName: "rejectProducer",
       args: [producer],
       account: address,
     });
 
-    await client.waitForTransactionReceipt({ hash: tx });
-    alert("Producer Rejected!");
+    await waitForTransactionReceipt(client, { hash: tx });
+    toast.success("Producer Rejected!");
+    //alert("Producer Rejected!");
     loadPending();
     console.log("Rejected Hash:", tx);
   };

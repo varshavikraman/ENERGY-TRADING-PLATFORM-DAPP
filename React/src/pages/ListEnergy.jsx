@@ -3,6 +3,7 @@ import { useWallet } from "../context/WalletContext";
 import { writeContract, readContract } from "viem/actions";
 import ET from "../assets/ET.json";  
 import {  parseEther } from "viem";
+import toast from "react-hot-toast";
 
 const ListEnergy = () => {
     const { address, connectWallet, client } = useWallet();
@@ -15,17 +16,17 @@ const ListEnergy = () => {
 
             // 1. Approve marketplace to spend tokens
             const approveTx = await writeContract(client, {
-                address: ET.TOKEN_ADDRESS,
+                address: ET.Hoodi_TOKEN_ADDRESS,
                 abi: ET.EnergyTokenABI,
                 functionName: "approve",
-                args: [ET.MARKETPLACE_ADDRESS, BigInt(amt)],
+                args: [ET.Hoodi_MARKETPLACE_ADDRESS, BigInt(amt)],
                 account: address,
             });
             console.log("Approve Tx:", approveTx);
 
             // 2. Now list energy
             const tx = await writeContract(client, {
-                address: ET.MARKETPLACE_ADDRESS,
+                address: ET.Hoodi_MARKETPLACE_ADDRESS,
                 abi: ET.EnergyMarketplaceABI,
                 functionName: "listEnergy",
                 args: [
@@ -37,12 +38,14 @@ const ListEnergy = () => {
 
             console.log("List Tx:", tx);
 
-            alert("Energy listed successfully!");
+            // alert("Energy listed successfully!");
+            toast.success("Energy listed successfully!");
             setAmt("");
             setPrice("");
         } catch (err) {
             console.error(err);
-            alert("Listing failed!");
+            // alert("Listing failed!");
+            toast.error("Listing failed!");
         }
     };
 

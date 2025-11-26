@@ -24,7 +24,7 @@ const ProducerRegister = () => {
             const hashedAadhaar = keccak256(toBytes(formData.aadhaar));
 
             const tx = await writeContract(client, {
-                address: ET.REGISTRY_ADDRESS,
+                address: ET.Hoodi_REGISTRY_ADDRESS,
                 abi: ET.ProducerRegistryABI,
                 functionName: "requestProducerApproval",
                 args: [
@@ -36,7 +36,8 @@ const ProducerRegister = () => {
                 account: address,
             });
 
-            alert("Producer request submitted!");
+            // alert("Producer request submitted!");
+            toast.success("Producer request submitted!");
             console.log("Tx Hash:", tx);
 
             setFormData({
@@ -47,7 +48,8 @@ const ProducerRegister = () => {
             });
         } catch (err) {
             console.error(err);
-            alert("Transaction failed!");
+            // alert("Transaction failed!");
+            toast.error("Transaction failed!");
         }
     };
 

@@ -1,12 +1,12 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import {ToastContainer} from 'react-toastify'
+import { Toaster } from "react-hot-toast";
 
 const HomeLayout = () => {
   return (
     <div>
         <Outlet/>
-        <ToastContainer/>
+        <Toaster/>
     </div>
   )
 }

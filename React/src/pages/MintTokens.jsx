@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useWallet } from "../context/WalletContext";
-import { writeContract, readContract } from "viem/actions";
+import { writeContract, readContract, waitForTransactionReceipt } from "viem/actions";
 import ET from "../assets/ET.json";  
+import toast from "react-hot-toast";
 
 const MintTokens = () => {
     const { address, client, connectWallet } = useWallet();
@@ -12,7 +13,7 @@ const MintTokens = () => {
         if (!address) return;
 
         const bal = await readContract(client, {
-            address: ET.TOKEN_ADDRESS,
+            address: ET.Hoodi_TOKEN_ADDRESS,
             abi: ET.EnergyTokenABI,
             functionName: "balanceOf",
             args: [address],
@@ -30,7 +31,7 @@ const MintTokens = () => {
             if (!address) await connectWallet();
 
             const tx = await writeContract(client, {
-                address: ET.TOKEN_ADDRESS,
+                address: ET.Hoodi_TOKEN_ADDRESS,
                 abi: ET.EnergyTokenABI,
                 functionName: "mintEnergy",
                 args: [BigInt(amount)],
@@ -39,16 +40,18 @@ const MintTokens = () => {
 
             console.log("Tx Hash:", tx);
             
-            await client.waitForTransactionReceipt({ hash: tx });
+            await waitForTransactionReceipt(client, { hash: tx });
 
-            alert("Mint successful!");
+            // alert("Mint successful!");
+            toast.success("Mint successful!");
 
             setAmount("");
 
             await loadBalance();
         } catch (err) {
             console.error(err);
-            alert("Mint failed!");
+            // alert("Mint failed!");
+            toast.error("Mint failed!");
         }
     };
 

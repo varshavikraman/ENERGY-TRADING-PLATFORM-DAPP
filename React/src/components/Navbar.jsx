@@ -42,12 +42,6 @@ const Navbar = () => {
                             className="px-4 py-2.5 rounded-xl text-base font-semibold transition-all duration-200 flex items-center space-x-2 text-white hover:bg-emerald-400 hover:shadow-sm hover:translate-y-[-1px]"
                         >
                             List Energy
-                        </Link>                        
-                        <Link 
-                            to="/market"
-                            className="px-4 py-2.5 rounded-xl text-base font-semibold transition-all duration-200 flex items-center space-x-2 text-white hover:bg-emerald-400 hover:shadow-sm hover:translate-y-[-1px]"
-                        >
-                            Buy Energy
                         </Link>
                     </div>
                     

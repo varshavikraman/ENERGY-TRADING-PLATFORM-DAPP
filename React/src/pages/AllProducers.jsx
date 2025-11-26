@@ -9,7 +9,7 @@ const AllProducers = () => {
 
   const loadProducers = async () => {
     const addresses = await readContract(client, {
-      address: ET.REGISTRY_ADDRESS,
+      address: ET.Hoodi_REGISTRY_ADDRESS,
       abi: ET.ProducerRegistryABI,
       functionName: "getAllProducers",
     });
@@ -17,7 +17,7 @@ const AllProducers = () => {
     const list = [];
     for (let p of addresses) {
       const details = await readContract(client, {
-        address: ET.REGISTRY_ADDRESS,
+        address: ET.Hoodi_REGISTRY_ADDRESS,
         abi: ET.ProducerRegistryABI,
         functionName: "getProducerDetails",
         args: [p],

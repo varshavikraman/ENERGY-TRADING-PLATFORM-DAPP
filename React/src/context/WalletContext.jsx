@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { createWalletClient, custom } from "viem";
-import { hardhat } from "viem/chains";
-//import toast from "react-hot-toast";
+import { hardhat, hoodi } from "viem/chains";
+import toast from "react-hot-toast";
 
 const WalletContext = createContext();
 
@@ -9,15 +9,15 @@ export const WalletProvider = ({ children }) => {
   const [address, setAddress] = useState("");
 
   const client = createWalletClient({
-    chain: hardhat,
+    chain: hoodi,
     transport: custom(window.ethereum),
   });
 
   const connectWallet = async () => {
     try {
         if (!window.ethereum) {
-            //toast.error("MetaMask not installed!");
-            alert("MetaMask not installed!");
+            toast.error("MetaMask not installed!");
+            //alert("MetaMask not installed!");
             return;
         }
 
@@ -25,13 +25,13 @@ export const WalletProvider = ({ children }) => {
 
       setAddress(addr);
       console.log("Connected:", addr);
-      //toast.success("Wallet Connected!");
-      alert("Wallet Connected!");
+      toast.success("Wallet Connected!");
+      //alert("Wallet Connected!");
       return addr;
     } catch (err) {
       console.error("Wallet connection failed:", err);
-    //toast.error("Wallet connection failed!");
-     alert("Wallet connection failed!");
+      toast.error("Wallet connection failed!");
+      //alert("Wallet connection failed!");
 
     }
   };
@@ -58,8 +58,8 @@ export const WalletProvider = ({ children }) => {
 
     const disconnectWallet = () => {
         setAddress("");
-        //toast("Wallet Disconnected");
-        alert("Wallet Disconnected");
+        toast("Wallet Disconnected");
+        //alert("Wallet Disconnected");
     };
 
   return (

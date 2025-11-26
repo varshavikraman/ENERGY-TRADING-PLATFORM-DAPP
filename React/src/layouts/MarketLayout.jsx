@@ -1,7 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import {ToastContainer} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { Toaster } from "react-hot-toast";
 import MarketNav from '../components/MarketNav'
 
 const MarketLayout = () => {
@@ -9,7 +8,7 @@ const MarketLayout = () => {
     <div>
         <MarketNav/>
         <Outlet/>
-        <ToastContainer/>
+        <Toaster/>
     </div>
   )
 }

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useWallet } from "../context/WalletContext";
-import { readContract, writeContract } from "viem/actions";
+import { writeContract, readContract, waitForTransactionReceipt } from "viem/actions";
 import { formatEther } from "viem";
 import ET from "../assets/ET.json";
+import toast from "react-hot-toast";
 
 const BuyEnergy = () => {
     const { address, connectWallet, client } = useWallet();
@@ -10,13 +11,12 @@ const BuyEnergy = () => {
     const [loading, setLoading] = useState(false);
     const [txHash, setTxHash] = useState(null);
 
-    // Load all listings
     async function loadListings() {
         try {
             setLoading(true);
 
             const count = await readContract(client, {
-                address: ET.MARKETPLACE_ADDRESS,
+                address: ET.Hoodi_MARKETPLACE_ADDRESS,
                 abi: ET.EnergyMarketplaceABI,
                 functionName: "listingCount",
             });
@@ -24,13 +24,12 @@ const BuyEnergy = () => {
             const items = [];
             for (let i = 0; i < Number(count); i++) {
                 const listing = await readContract(client, {
-                    address: ET.MARKETPLACE_ADDRESS,
+                    address: ET.Hoodi_MARKETPLACE_ADDRESS,
                     abi: ET.EnergyMarketplaceABI,
                     functionName: "listings",
                     args: [i],
                 });
 
-                // listing = [producer, amount, price, active]
                 if (listing[3] === true) {
                     items.push({
                         id: i,
@@ -45,7 +44,8 @@ const BuyEnergy = () => {
             setListings(items);
         } catch (err) {
             console.error(err);
-            alert("Failed to load listings!");
+            //alert("Failed to load listings!");
+            toast.error("Failed to load listings!");
         } finally {
             setLoading(false);
         }
@@ -55,19 +55,17 @@ const BuyEnergy = () => {
         loadListings();
     }, []);
 
-    // BUY FULL LISTING (no user input)
     const buy = async (listingId, amt, priceWei) => {
         try {
             if (!address) await connectWallet();
 
-            //const amt = BigInt(amount);   // auto amount
-            const totalCost = BigInt(amt) * priceWei;    // full lot price
+            const totalCost = BigInt(amt) * priceWei;    
 
             console.log("Buying:", amt.toString(), "ENG");
             console.log("Total cost (wei):", totalCost.toString());
 
             const tx = await writeContract(client, {
-                address: ET.MARKETPLACE_ADDRESS,
+                address: ET.Hoodi_MARKETPLACE_ADDRESS,
                 abi: ET.EnergyMarketplaceABI,
                 functionName: "buyEnergy",
                 args: [listingId, amt],
@@ -77,14 +75,15 @@ const BuyEnergy = () => {
             
             console.log("Purchase Tx Hash: ",tx);
             
-            await client.waitForTransactionReceipt({ hash: tx });
+            await waitForTransactionReceipt(client, { hash: tx });
             setTxHash(tx);
-            alert("Energy Purchased!");
-
+            // alert("Energy Purchased!");
+            toast.success("Energy Purchased!");
             await loadListings();
         } catch (error) {
             console.error("Buy Error:", error);
-            alert("Purchase failed!");
+            // alert("Purchase failed!");
+            toast.error("Purchase failed!");
         }
     };
 

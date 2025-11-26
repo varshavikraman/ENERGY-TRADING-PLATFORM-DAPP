@@ -12,7 +12,7 @@ const Home = () => {
         async function load() {
             if (!client) return;
             const a = await readContract(client, {
-                address: ET.REGISTRY_ADDRESS,
+                address: ET.Hoodi_REGISTRY_ADDRESS,
                 abi: ET.ProducerRegistryABI,
                 functionName: "admin",
             });
