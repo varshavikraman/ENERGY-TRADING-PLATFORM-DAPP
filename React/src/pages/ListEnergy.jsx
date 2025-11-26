@@ -13,6 +13,17 @@ const ListEnergy = () => {
         try {
             if (!address) await connectWallet();
 
+            // 1. Approve marketplace to spend tokens
+            const approveTx = await writeContract(client, {
+                address: ET.TOKEN_ADDRESS,
+                abi: ET.EnergyTokenABI,
+                functionName: "approve",
+                args: [ET.MARKETPLACE_ADDRESS, BigInt(amt)],
+                account: address,
+            });
+            console.log("Approve Tx:", approveTx);
+
+            // 2. Now list energy
             const tx = await writeContract(client, {
                 address: ET.MARKETPLACE_ADDRESS,
                 abi: ET.EnergyMarketplaceABI,
@@ -24,8 +35,8 @@ const ListEnergy = () => {
                 account: address,
             });
 
-            console.log("Transtion Hash:",tx);
-            
+            console.log("List Tx:", tx);
+
             alert("Energy listed successfully!");
             setAmt("");
             setPrice("");
@@ -35,6 +46,7 @@ const ListEnergy = () => {
         }
     };
 
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-12 px-4">
             <div className="max-w-md mx-auto">
@@ -43,11 +55,17 @@ const ListEnergy = () => {
                         <h2 className="text-2xl font-bold text-gray-800">List Energy for Sale</h2>
                         <p className="text-gray-600 mt-2">Sell your energy tokens on the marketplace</p>
                     </div>
-
-                    <div className="space-y-6">
+                    {!address && (
+                        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
+                            <p className="text-amber-700 text-sm">
+                                Please connect your wallet to list energy
+                            </p>
+                        </div>
+                    )}
+                    <div className="mt-4 space-y-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Amount 
+                               Token Amount 
                             </label>
                             <input
                                 type="number"
@@ -66,7 +84,7 @@ const ListEnergy = () => {
                             <input
                                 type="number"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
-                                placeholder="Enter price in wei"
+                                placeholder="Enter price per token"
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
                                 required
@@ -82,14 +100,6 @@ const ListEnergy = () => {
                             </svg>
                             <span>List Energy</span>
                         </button>
-
-                        {!address && (
-                            <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
-                                <p className="text-amber-700 text-sm">
-                                    Please connect your wallet to list energy
-                                </p>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>

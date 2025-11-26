@@ -3,6 +3,7 @@ pragma solidity 0.8.30;
 
 interface IEnergyToken {
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
+    function transfer(address to, uint256 amount) external returns (bool);
 }
 
 interface IProducerRegistry {
@@ -37,9 +38,9 @@ contract EnergyMarketplace {
         uint256 totalCost
     );
 
-    constructor(address tokenAddress, address registryAddress) {
-        token = IEnergyToken(tokenAddress);
+    constructor(address registryAddress, address tokenAddress) {
         registry = IProducerRegistry(registryAddress);
+        token = IEnergyToken(tokenAddress);
     }
 
     modifier onlyApprovedProducer() {
@@ -50,6 +51,10 @@ contract EnergyMarketplace {
     function listEnergy(uint256 _amt, uint256 _price) external onlyApprovedProducer {
         require(_amt > 0, "Invalid amount");
         require(_price > 0, "Invalid price");
+
+        // Producer sends tokens upfront
+        bool ok = token.transferFrom(msg.sender, address(this), _amt);
+        require(ok, "Token transfer to marketplace failed");
 
         listings[listingCount] = Listing({
             producer: msg.sender,
@@ -76,8 +81,8 @@ contract EnergyMarketplace {
         payable(ls.producer).transfer(msg.value);
 
         // Transfer energy tokens to buyer
-        bool ok = token.transferFrom(ls.producer, msg.sender, _amt);
-        require(ok, "Token transfer failed");
+        bool ok = token.transfer(msg.sender, _amt);
+        require(ok, "Token transfer to buyer failed");
 
         // Update listing remaining amount
         ls.amount -= _amt;
