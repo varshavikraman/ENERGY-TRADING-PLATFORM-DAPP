@@ -13,8 +13,8 @@ describe("EnergyMarketplace Tests", async function () {
         const registry = await viem.deployContract("MockProducerRegistry");
 
         const market = await viem.deployContract("EnergyMarketplace", [
-            token.address,
-            registry.address
+            registry.address,   // registry FIRST
+            token.address       // token SECOND
         ]);
 
         // approve producer
@@ -23,13 +23,17 @@ describe("EnergyMarketplace Tests", async function () {
         // producer gets some energy tokens
         await token.write.mint([producer.account.address, 1000n]);
 
+        await token.write.approve([market.address, 1000n], {
+            account: producer.account
+        });
+
         return {owner, producer, buyer, BigInt, token, registry, market};
     }
 
     type MarketDetails = [string, bigint, bigint, boolean];
 
     it("should allow approved producer to list energy", async () => {
-        const { market, producer } = await networkHelpers.loadFixture(deployAll);
+        const { producer, market } = await networkHelpers.loadFixture(deployAll);
 
         await market.write.listEnergy([100n, 2n], { account: producer.account });
 
@@ -43,12 +47,12 @@ describe("EnergyMarketplace Tests", async function () {
 
 
     it("should NOT allow unapproved user to list energy", async () => {
-        const { market, owner } = await networkHelpers.loadFixture(deployAll);
+        const { buyer, market } = await networkHelpers.loadFixture(deployAll);
 
         await assert.rejects(
         market.write.listEnergy(
                 [100n, 1n], 
-                { account: owner.account }
+                { account: buyer.account }
             ),
         );
     });
@@ -58,20 +62,20 @@ describe("EnergyMarketplace Tests", async function () {
 
     // Producer lists energy: amount = 50, price = 2 wei per unit
     await market.write.listEnergy([50n, 2n], {
-        account: producer.account,
-    });
+            account: producer.account
+        });
 
     // Buyer purchases 20 units → cost = 20 * 2 = 40 wei
-    await market.write.buyEnergy([0n, 20n], {
-        account: buyer.account,
-        value: 40n, // exact match: amount * price
-    });
-
+    await market.write.buyEnergy([0n, 10n], {
+            value: 20n, // 10 units × price 2
+            account: buyer.account
+        });
+    
     const listing = await market.read.listings([0n]);
-    const buyerBal = await token.read.balance([buyer.account.address]);
+    assert.equal(listing[1], 40n);
 
-    assert.equal(listing[1], 30n);  // remaining amount = 50 - 20
-    assert.equal(buyerBal, 20n);    // tokens received
+    const buyerBalance = await token.read.balanceOf([buyer.account.address]);
+    assert.equal(buyerBalance, 10n);  // tokens received
 });
 
 it("should mark listing inactive when amount reaches zero", async () => {
@@ -84,8 +88,8 @@ it("should mark listing inactive when amount reaches zero", async () => {
 
     // Buyer purchases all 10 units → cost = 10 * 1 = 10 wei
     await market.write.buyEnergy([0n, 10n], {
-        account: buyer.account,
-        value: 10n, // matches total cost
+        value: 10n,
+        account: buyer.account
     });
 
     const listing = await market.read.listings([0n]);
@@ -98,13 +102,15 @@ it("should mark listing inactive when amount reaches zero", async () => {
   it("should reject incorrect ETH payments", async () => {
     const { market, producer, buyer } = await networkHelpers.loadFixture(deployAll);
 
-    await market.write.listEnergy([20n, 2n], { account: producer.account });
+    await market.write.listEnergy([20n, 2n], { 
+        account: producer.account 
+    });
 
     // cost = 20 * 2 = 40 ETH, but buyer sends 1 ETH
     await assert.rejects(
-      market.write.buyEnergy([0n, 20n], {
-        account: buyer.account,
-        value: parseEther("1"),
+      market.write.buyEnergy([0n, 5n], {
+        value: 1n, // WRONG (should be 10)
+        account: buyer.account
       })
     );
   });

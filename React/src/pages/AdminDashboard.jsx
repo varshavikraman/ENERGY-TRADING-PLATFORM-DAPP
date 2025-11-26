@@ -46,15 +46,8 @@ const AdminDashboard = () => {
     }
   };
 
-  // Load on mount + auto-refresh every 5 seconds
   useEffect(() => {
     loadPending();
-
-    const interval = setInterval(() => {
-      loadPending();
-    }, 2000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const approve = async (producer) => {
@@ -70,7 +63,7 @@ const AdminDashboard = () => {
 
     await client.waitForTransactionReceipt({ hash: tx });
     alert("Producer Approved!");
-    loadPending();
+    await loadPending();
     console.log("Approved Hash:", tx);
   };
 

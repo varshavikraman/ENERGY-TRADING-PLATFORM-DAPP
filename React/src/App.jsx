@@ -9,7 +9,9 @@ import BuyEnergy from './pages/BuyEnergy'
 import AllProducers from './pages/AllProducers'
 import HomeLayout from "./layouts/HomeLayout"
 import AuthLayout from "./layouts/AuthLayout";
-import MainLayout from "./layouts/MainLayout"
+import ProducerLayout from "./layouts/ProducerLayout"
+import MarketplaceDashboard from './pages/MarketplaceDashboard'
+import MarketLayout from './layouts/MarketLayout'
 
 const router = createBrowserRouter([
   {
@@ -26,12 +28,19 @@ const router = createBrowserRouter([
     ],
   },
   {
-    element: <MainLayout />,
+    element: <ProducerLayout />,
     children: [
       { path: "producer-register", element: <ProducerRegister /> },
       { path: "mint", element: <MintTokens /> },
       { path: "list", element: <ListEnergy /> },
-      { path: "market", element: <BuyEnergy /> },
+    ],
+  },
+  {
+    element: <MarketLayout />,
+    children: [
+      
+      { path: "market", element: <MarketplaceDashboard/>},
+      { path: "buy", element: <BuyEnergy /> }
     ],
   },
 ])

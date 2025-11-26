@@ -75,13 +75,13 @@ const BuyEnergy = () => {
                 account: address,
             });
             
-            console.log("Tx Hash: ",tx);
+            console.log("Purchase Tx Hash: ",tx);
             
-            //await client.waitForTransactionReceipt({ hash: tx });
+            await client.waitForTransactionReceipt({ hash: tx });
             setTxHash(tx);
             alert("Energy Purchased!");
 
-            loadListings();
+            await loadListings();
         } catch (error) {
             console.error("Buy Error:", error);
             alert("Purchase failed!");
@@ -95,20 +95,15 @@ const BuyEnergy = () => {
                     <h2 className="text-3xl font-bold text-gray-800">Energy Marketplace</h2>
                     <p className="text-gray-600 mt-2">Buy energy tokens from producers</p>
                 </div>
-
-                <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
-                    <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-xl font-semibold text-gray-800">Available Listings</h3>
-                        <button
-                            onClick={loadListings}
-                            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all duration-200"
-                        >
-                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            <span>Refresh</span>
-                        </button>
-                    </div>
+                {!address && (
+                        <div className="my-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
+                            <p className="text-amber-700 text-sm">
+                                Please connect your wallet to purchase energy
+                            </p>
+                        </div>
+                    )}
+                <div>
+                    <h3 className="text-xl font-semibold text-gray-800">Available Listings</h3>
 
                     {/* Loading */}
                     {loading && (
@@ -169,21 +164,7 @@ const BuyEnergy = () => {
                             ))}
                         </div>
                     )}
-
-                    {/* Transaction Hash */}
-                    {txHash && (
-                        <div className="mt-6 bg-green-50 border border-green-200 p-4 rounded-xl">
-                            <p className="font-medium text-green-700">Purchase Successful!</p>
-                            <p className="text-xs break-all">{txHash}</p>
-                        </div>
-                    )}
-                    {!address && (
-                        <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
-                            <p className="text-amber-700 text-sm">
-                                Please connect your wallet to purchase energy
-                            </p>
-                        </div>
-                    )}
+                    
                 </div>
             </div>
         </div>
