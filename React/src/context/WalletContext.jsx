@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { createWalletClient, custom } from "viem";
+import { createWalletClient,createPublicClient, custom, http } from "viem";
 import { hardhat, hoodi } from "viem/chains";
 import toast from "react-hot-toast";
 
@@ -63,7 +63,7 @@ export const WalletProvider = ({ children }) => {
     };
 
   return (
-    <WalletContext.Provider value={{ address, connectWallet, disconnectWallet, client }}>
+    <WalletContext.Provider value={{ address, connectWallet, disconnectWallet, client}}>
       {children}
     </WalletContext.Provider>
   );

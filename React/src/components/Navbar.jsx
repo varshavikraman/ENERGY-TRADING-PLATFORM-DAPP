@@ -26,6 +26,12 @@ const Navbar = () => {
 
                     <div className="flex items-center space-x-1">
                         <Link 
+                            to="/producer"
+                            className="px-4 py-2.5 rounded-xl text-base font-semibold transition-all duration-200 flex items-center space-x-2 text-white hover:bg-emerald-400 hover:shadow-sm hover:translate-y-[-1px]"
+                        >
+                            Producer Dashboard
+                        </Link>
+                        <Link 
                             to="/producer-register"
                             className="px-4 py-2.5 rounded-xl text-base font-semibold transition-all duration-200 flex items-center space-x-2 text-white hover:bg-emerald-400 hover:shadow-sm hover:translate-y-[-1px]"
                         >

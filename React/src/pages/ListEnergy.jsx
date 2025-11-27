@@ -14,7 +14,6 @@ const ListEnergy = () => {
         try {
             if (!address) await connectWallet();
 
-            // 1. Approve marketplace to spend tokens
             const approveTx = await writeContract(client, {
                 address: ET.Hoodi_TOKEN_ADDRESS,
                 abi: ET.EnergyTokenABI,
@@ -24,7 +23,6 @@ const ListEnergy = () => {
             });
             console.log("Approve Tx:", approveTx);
 
-            // 2. Now list energy
             const tx = await writeContract(client, {
                 address: ET.Hoodi_MARKETPLACE_ADDRESS,
                 abi: ET.EnergyMarketplaceABI,

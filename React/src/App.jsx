@@ -12,6 +12,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import ProducerLayout from "./layouts/ProducerLayout"
 import MarketplaceDashboard from './pages/MarketplaceDashboard'
 import MarketLayout from './layouts/MarketLayout'
+import ProducerDashboard from './pages/ProducerDashboard'
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
   {
     element: <ProducerLayout />,
     children: [
+      { path: "producer", element: <ProducerDashboard /> },
       { path: "producer-register", element: <ProducerRegister /> },
       { path: "mint", element: <MintTokens /> },
       { path: "list", element: <ListEnergy /> },

@@ -91,7 +91,7 @@ const Home = () => {
                         </Link>
                     )}
                     <Link 
-                        to="/producer-register" 
+                        to="/producer" 
                         className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:translate-y-[-2px] border border-green-200 group w-full md:w-auto min-w-[300px]"
                     >
                         <div className="flex items-center space-x-4">

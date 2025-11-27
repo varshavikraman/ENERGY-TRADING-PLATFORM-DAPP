@@ -104,7 +104,6 @@ const BuyEnergy = () => {
                 <div>
                     <h3 className="text-xl font-semibold text-gray-800">Available Listings</h3>
 
-                    {/* Loading */}
                     {loading && (
                         <div className="text-center py-8">
                             <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -112,7 +111,6 @@ const BuyEnergy = () => {
                         </div>
                     )}
 
-                    {/* No listings */}
                     {listings.length === 0 && !loading ? (
                         <div className="text-center py-8">
                             <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -148,7 +146,6 @@ const BuyEnergy = () => {
                                         </div>
                                     </div>
 
-                                    {/* Buy entire listing */}
                                     <button
                                         onClick={() => buy(ls.id, ls.amount, ls.priceWei)}
                                         className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow hover:shadow-md flex items-center justify-center space-x-2"
