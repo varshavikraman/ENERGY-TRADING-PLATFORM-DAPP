@@ -13,20 +13,18 @@ const ProducerDashboard = () => {
   const [listings, setListings] = useState([]);
   const [sales, setSales] = useState([]);
 
-  // Status mapping function
   const getStatusText = (status) => {
     if (status === 1) return "Pending";
     if (status === 2) return "Approved";
     if (status === 3) return "Rejected";
-    return "Unknown";
+    return "";
   };
 
-  // Status color mapping function
   const getStatusColor = (status) => {
-    if (status === 2) return "text-green-600"; // Approved
-    if (status === 1) return "text-yellow-600"; // Pending
-    if (status === 3) return "text-red-600"; // Rejected
-    return "text-gray-600"; // Unknown
+    if (status === 2) return "text-green-600"; 
+    if (status === 1) return "text-yellow-600"; 
+    if (status === 3) return "text-red-600"; 
+    return "text-gray-600"; 
   };
 
   useEffect(() => {
@@ -164,15 +162,12 @@ const ProducerDashboard = () => {
           </div>
         ) : (
           <>
-            {/* Header */}
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-800 mb-2">Producer Dashboard</h2>
               <p className="text-gray-600">Manage your energy production and sales</p>
             </div>
 
-            {/* Main Dashboard Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-              {/* Producer Details Card */}
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2">
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,26 +177,25 @@ const ProducerDashboard = () => {
                 </h3>
                 <div className="space-y-3">
                   <div>
-                    <p className="font-medium text-gray-800"><span className="font-medium text-sm text-gray-500">Name: </span>{producerDetails.name || "Not available"}</p>
+                    <p className="font-medium text-gray-800"><span className="font-medium text-sm text-gray-500">Name: </span>{producerDetails.name || " "}</p>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-800"><span className="font-medium text-sm text-gray-500">Location: </span>{producerDetails.location || "Not available"}</p>
+                    <p className="font-medium text-gray-800"><span className="font-medium text-sm text-gray-500">Location: </span>{producerDetails.location || " "}</p>
                   </div>
                   <div>
                     <p className="font-medium text-gray-800">
                       <span className="font-medium text-sm text-gray-500">Capacity: </span>
-                      {producerDetails.capacity ? Number(producerDetails.capacity) : "Not available"}
+                      {producerDetails.capacity ? Number(producerDetails.capacity) : " "}
                     </p>
                   </div>
                   <div>
                     <p className={`font-medium ${getStatusColor(producerDetails.status)}`}>
-                      <span className="font-medium text-sm text-gray-500">Status: </span>{getStatusText(producerDetails.status) || "Not available"}
+                      <span className="font-medium text-sm text-gray-500">Status: </span>{getStatusText(producerDetails.status) || " "}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Minted Tokens Card */}
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2">
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,7 +209,6 @@ const ProducerDashboard = () => {
                 </div>
               </div>
 
-              {/* Quick Stats Card */}
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2">
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -236,9 +229,7 @@ const ProducerDashboard = () => {
               </div>
             </div>
 
-            {/* Listings and Sales Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Your Listings */}
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Your Listings</h3>
                 {listings.length === 0 ? (
@@ -268,7 +259,6 @@ const ProducerDashboard = () => {
                 )}
               </div>
 
-              {/* Your Sales */}
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-green-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Your Sales</h3>
                 {sales.length === 0 ? (

@@ -61,7 +61,7 @@ const Home = () => {
             <div className="max-w-4xl mx-auto">                
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                        Welcome to Energy Trading DApp
+                        Welcome to EcoFlow
                     </h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                         Connect your wallet to interact with the marketplace and producer tools for sustainable energy trading.

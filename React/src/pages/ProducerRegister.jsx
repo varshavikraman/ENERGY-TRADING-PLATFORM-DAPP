@@ -3,6 +3,7 @@ import { useWallet } from "../context/WalletContext";
 import { writeContract } from 'viem/actions';
 import ET from '../assets/ET.json';
 import { keccak256, toBytes } from "viem";
+import toast from "react-hot-toast";
 
 const ProducerRegister = () => {
     const [formData, setFormData] = useState({

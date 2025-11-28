@@ -139,6 +139,6 @@ Follow these steps to get EcoFlow running on your local machine.
 
 Watch a full walkthrough of the registration, minting, listing, and purchasing processes on EcoFlow.
 
-<a href="" target="_blank">▶️ [Watch Demo]</a>  
+<a href="https://drive.google.com/file/d/1NJv9rfqaCuxtjpqpjVNUVhoCq75js0y2/view?usp=sharing" target="_blank">▶️ [Watch Demo]</a>  
 
 
