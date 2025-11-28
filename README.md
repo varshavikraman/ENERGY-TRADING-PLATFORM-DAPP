@@ -1,6 +1,6 @@
 # ⚡ EcoFlow – Decentralized Energy Trading Platform
 
-> A transparent, peer-to-peer marketplace for renewable energy built on the Ethereum Virtual Machine (EVM).
+> A transparent, peer-to-peer marketplace for trading tokenized renewable energy (ERC-20) on Ethereum.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tech Stack: Solidity](https://img.shields.io/badge/Solidity-EVM-blueviolet)](https://soliditylang.org/)
